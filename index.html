@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E.V.E. | Premium Roblox Scripts</title>
+    <meta name="description" content="Most reliable and most stable scripts you can imagine. 5+ games supported. Premium Roblox Luau scripts for the discerning player.">
+    <meta property="og:title" content="E.V.E.">
+    <meta property="og:description" content="E.V.E. scripts - Most reliable and most stable scripts you can imagine. 5+ games supported">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://eve.fun"> <meta property="og:site_name" content="E.V.E.">
+    <meta name="theme-color" content="#ff3333"> <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="E.V.E.">
+    <meta name="twitter:description" content="E.V.E. scripts - Most reliable and most stable scripts you can imagine. 5+ games supported">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Outfit', 'sans-serif'],
+              mono: ['Space Mono', 'monospace'],
+            },
+            colors: {
+              brand: {
+                dark: '#050505',
+                accent: '#ff3333', /* HAUPT-AKZENT: ROT */
+                glow: '#cc0000', /* ROT GLOW */
+                cyan: '#06b6d4'
+              }
+            },
+            backgroundImage: {
+              'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+            },
+            keyframes: {
+              shimmer: {
+                '100%': {
+                  transform: 'translateX(100%)'
+                },
+              }
+            },
+            animation: {
+              shimmer: 'shimmer 1s infinite',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #0a0a0a;
+        color: #ffffff;
+        overflow-x: hidden;
+      }
+      /* Scrollbar-Farbe anpassen (Akzent Rot) */
+      ::-webkit-scrollbar-thumb:hover {
+        background: #ff3333;
+      }
+      /* Auswahlfarbe anpassen (Akzent Rot) */
+      .antialiased.selection\:bg-brand-accent.selection\:text-white::selection {
+        background-color: #ff3333;
+        color: white;
+      }
+      
+      .glass-panel {
+        background: rgba(20, 20, 20, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      }
+      .glass-nav {
+        background: rgba(10, 10, 10, 0.9);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .tilt-card {
+        transform-style: preserve-3d;
+        transform: perspective(1000px);
+      }
+      .tilt-content {
+        transform: translateZ(20px);
+      }
+      /* Text Glow anpassen (Rot Glow) */
+      .text-glow {
+        text-shadow: 0 0 20px rgba(255, 51, 51, 0.5); 
+      }
+      .token.keyword {
+        color: #ff8080; /* Helleres Rot für Keywords */
+      }
+      .token.function {
+        color: #ff6666; 
+      }
+      .token.string {
+        color: #ff9999;
+      }
+      .token.comment {
+        color: #5c6370;
+        font-style: italic;
+      }
+      #bg-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.3;
+      }
+    </style>
+  </head>
+  <body class="antialiased selection:bg-brand-accent selection:text-white">
+    <canvas id="bg-canvas"></canvas>
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-[-1]">
+      <div class="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-brand-accent/10 rounded-full blur-[120px]"></div>
+      <div class="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] bg-black/20 rounded-full blur-[120px]"></div>
+    </div>
+    <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-xl tracking-wider">E.V.E.</span>
+        </div>
+        <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
+          <a href="#why-us" class="hover:text-white transition-colors">Why Us</a>
+          <a href="#games" class="hover:text-white transition-colors">Games</a>
+          <a href="#scripts" class="hover:text-white transition-colors">Library</a>
+          <a href="#developers" class="hover:text-white transition-colors">Developers</a>
+        </div>
+        <a href="https://discord.gg/luperly" target="_blank" class="group relative px-6 py-2 bg-white/5 border border-white/10 rounded-full overflow-hidden transition-all hover:bg-brand-accent/20 hover:border-brand-accent/50">
+          <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:animate-[shimmer_1s_infinite]"></div>
+          <span class="relative flex items-center gap-2 text-sm font-semibold">
+            <i data-lucide="message-square" class="w-4 h-4"></i> Discord </span>
+        </a>
+      </div>
+    </nav>
+    <header class="relative min-h-screen flex items-center justify-center pt-20">
+      <div class="container mx-auto px-6 text-center z-10">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-8 animate-fade-in-up">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+          <span class="text-xs uppercase tracking-widest text-gray-300 font-semibold">Status: In Development</span>
+        </div>
+        <h1 class="text-5xl md:text-8xl font-black mb-6 leading-tight tracking-tight">
+          <span class="text-white">E.V.E.</span>
+          <br>
+          <span class="text-brand-accent">ROBLOX SCRIPT</span>
+        </h1>
+        <p class="text-xl text-gray-400 max-w-2xl mx-auto mb-10 font-light"> Premium, optimized Luau scripts for the discerning player. <br>
+          <span class="text-white font-medium border-b border-brand-accent/50">Not an executor.</span> Just pure, high-performance code.
+        </p>
+      </div>
+    </header>
+    <section id="games" class="py-24 relative bg-black/30">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold mb-4">
+            <span class="text-brand-accent">Supported Games</span>
+          </h2>
+          <p class="text-gray-400 max-w-2xl mx-auto"> We maintain powerful, game-specific scripts for all the most popular experiences on the platform. </p>
+        </div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div class="group relative overflow-hidden rounded-xl glass-panel aspect-square hover:border-brand-accent/50 transition-all duration-300 transform hover:scale-[1.02] cursor-pointer">
+            <img src="https://tr.rbxcdn.com/180DAY-8410cf5e1bbd7011ac338cb3a74e9f4d/512/512/Image/Webp/noFilter" alt="Blox Fruits Icon" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition-all flex items-end p-3">
+              <p class="text-white font-bold text-sm">Blox Fruits</p>
+            </div>
+            <span class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded-full bg-brand-accent/80 text-white">NEW</span>
+          </div>
+          <div class="group relative overflow-hidden rounded-xl glass-panel aspect-square hover:border-brand-accent/50 transition-all duration-300 transform hover:scale-[1.02] cursor-pointer">
+            <img src="https://tr.rbxcdn.com/180DAY-3eacda24071591b5157449a853e8b24c/768/432/Image/Webp/noFilter" alt="TheForge Icon" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition-all flex items-end p-3">
+              <p class="text-white font-bold text-sm">The Forge</p>
+            </div>
+          </div>
+          <div class="group relative overflow-hidden rounded-xl glass-panel aspect-square hover:border-brand-accent/50 transition-all duration-300 transform hover:scale-[1.02] cursor-pointer">
+            <img src="https://tr.rbxcdn.com/180DAY-3cb2f1c6ee4fb84a2bd9e363e51e4c6d/768/432/Image/Webp/noFilter" alt="FishIt Icon" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition-all flex items-end p-3">
+              <p class="text-white font-bold text-sm">Fish It</p>
+            </div>
+          </div>
+          <div class="group relative overflow-hidden rounded-xl glass-panel aspect-square hover:border-brand-accent/50 transition-all duration-300 transform hover:scale-[1.02] cursor-pointer">
+            <img src="https://cdn2.steamgriddb.com/icon_thumb/5487b2557b4811e4c8431f9faa663749.png" alt="Blade Ball Icon" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition-all flex items-end p-3">
+              <p class="text-white font-bold text-sm">Blade Ball</p>
+            </div>
+            <span class="absolute top-2 right-2 px-2 py-1 text-xs font-semibold rounded-full bg-red-500 text-white">IN DEV</span>
+          </div>
+          <div class="group relative overflow-hidden rounded-xl glass-panel aspect-square hover:border-brand-accent/50 transition-all duration-300 transform hover:scale-[1.02] cursor-pointer">
+            <img src="https://tr.rbxcdn.com/180DAY-c929c9ba9069190914f60bbfe47b6cb9/768/432/Image/Webp/noFilter" alt="Murder Mystery 2 Icon" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/50 group-hover:bg-black/20 transition-all flex items-end p-3">
+              <p class="text-white font-bold text-sm">MM2</p>
+            </div>
+          </div>
+          <div class="group relative overflow-hidden rounded-xl glass-panel aspect-square flex flex-col items-center justify-center border-dashed border-2 border-white/20 hover:border-brand-accent/80 transition-all duration-300 cursor-pointer">
+            <i data-lucide="plus-circle" class="w-10 h-10 text-brand-accent group-hover:scale-110 transition-transform mb-2"></i>
+            <p class="text-white font-semibold text-sm">More Games</p>
+            <p class="text-gray-400 text-xs mt-1">Coming Soon</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="scripts" class="py-24">
+      <div class="container mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
+        <div class="md:w-1/2">
+          <h2 class="text-4xl font-bold mb-6"><span class="text-white">Clean UI,</span> <br>
+            <span class="text-brand-accent">Cleaner Code.</span>
+          </h2>
+          <p class="text-gray-400 mb-8 leading-relaxed"> Most scripts clutter your screen. Ours feature a minimalist, retractable GUI designed to look like native game elements. Full customization via config files. </p>
+          <ul class="space-y-4 mb-8">
+            <li class="flex items-center gap-3">
+              <i data-lucide="check-circle" class="text-brand-accent w-5 h-5"></i>
+              <span>Auto-saving configurations</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <i data-lucide="check-circle" class="text-brand-accent w-5 h-5"></i>
+              <span>Keybind customization</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <i data-lucide="check-circle" class="text-brand-accent w-5 h-5"></i>
+              <span>Hardware ID (HWID) locked protection</span>
+            </li>
+          </ul>
+        </div>
+          <div class="md:w-1/2 w-full perspective-1000">
+            <div class="glass-panel rounded-xl overflow-hidden border border-white/10 shadow-2xl transform rotate-y-[-5deg] hover:rotate-y-0 transition-transform duration-500">
+              <div class="bg-white/5 px-4 py-3 flex items-center gap-2 border-b border-white/5">
+                <div class="flex gap-2">
+                  <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <div class="ml-4 text-xs font-mono text-gray-500">eve_loader.lua — E.V.E. Loader</div>
+              </div>
+              <div class="p-6 font-mono text-sm leading-loose overflow-x-auto bg-[#0f0f0f]">
+<pre><code><span class="token comment">-- ALL SCRIPTS ARE IN DEVELOPMENT. --</span>
+<span class="token comment">-- Please check back later. --</span></code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="py-24 relative overflow-hidden" id="why-us">
+      <div class="absolute inset-0 bg-brand-accent/5"></div>
+      <div class="container mx-auto px-6 relative z-10">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold mb-6"><span class="text-white">Why Choose</span> <span class="text-brand-accent">E.V.E.?</span>
+          </h2>
+          <p class="text-gray-400 max-w-xl mx-auto"> We don't just sell scripts; we sell a competitive edge backed by reliability and community support. </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div class="glass-panel p-6 rounded-xl hover:border-brand-accent/50 transition-colors">
+            <i data-lucide="bug-off" class="w-10 h-10 text-brand-accent mx-auto mb-4"></i>
+            <h3 class="font-bold text-xl mb-2">Unmatched Undetected Uptime</h3>
+            <p class="text-gray-400 text-sm">Our dedicated developers work 24/7 to ensure compatibility and bypass the latest anti-cheat systems. Say goodbye to bans.</p>
+          </div>
+          <div class="glass-panel p-6 rounded-xl hover:border-gray-500/50 transition-colors">
+            <i data-lucide="feather" class="w-10 h-10 text-gray-400 mx-auto mb-4"></i>
+            <h3 class="font-bold text-xl mb-2">Optimized Luau Code</h3>
+            <p class="text-gray-400 text-sm">Scripts are written for efficiency, consuming minimal resources to prevent FPS drops and keep your game running smooth.</p>
+          </div>
+          <div class="glass-panel p-6 rounded-xl hover:border-brand-accent/50 transition-colors">
+            <i data-lucide="users" class="w-10 h-10 text-brand-accent mx-auto mb-4"></i>
+            <h3 class="font-bold text-xl mb-2">Active Community Support</h3>
+            <p class="text-gray-400 text-sm">Join 15,000+ members in our Discord. Get support, request features, and access the free tier scripts instantly.</p>
+          </div>
+        </div>
+        <div class="text-center mt-12">
+          <a href="https://discord.gg/luperly" target="_blank" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-[#5865F2] font-lg rounded-lg hover:bg-[#4752C4] hover:shadow-[0_0_30px_rgba(88,101,242,0.4)]">
+            <span class="mr-3">
+              <i data-lucide="gamepad-2"></i>
+            </span> Join Discord Server <div class="absolute inset-0 rounded-lg ring-2 ring-white/20 group-hover:ring-white/40 group-hover:scale-105 transition-all"></div>
+          </a>
+        </div>
+      </div>
+    </section>
+    
+    <section id="developers" class="py-24 relative">
+      <div class="container mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl md:text-5xl font-bold mb-6"> <span class="text-white">Meet The</span> <span class="text-brand-accent">Developers</span>
+          </h2>
+          <p class="text-gray-400 max-w-2xl mx-auto"> The brilliant minds behind E.V.E.'s cutting-edge scripts. Passionate coders dedicated to delivering undetectable, high-performance solutions. </p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          
+          <div class="group glass-panel p-8 rounded-xl hover:border-white/50 transition-all duration-300 transform hover:scale-[1.02] text-center col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
+            <div class="relative inline-block mb-6">
+              <div class="w-24 h-24 rounded-full bg-white flex items-center justify-center mx-auto group-hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-shadow duration-300 border-2 border-brand-accent">
+                <span class="text-4xl font-black text-brand-accent">E</span>
+              </div>
+              <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full border-4 border-[#0a0a0a]"></div>
+            </div>
+            <h3 class="font-bold text-2xl mb-2">Evelion</h3>
+            <p class="text-yellow-500 text-sm font-semibold mb-3 uppercase tracking-wider">Founder</p>
+            </div>
+          
+          <div class="group glass-panel p-8 rounded-xl hover:border-brand-accent/50 transition-all duration-300 transform hover:scale-[1.02] text-center">
+            <div class="relative inline-block mb-6">
+              <div class="w-24 h-24 rounded-full bg-gradient-to-br from-brand-accent to-brand-glow flex items-center justify-center mx-auto group-hover:shadow-[0_0_40px_rgba(255,51,51,0.4)] transition-shadow duration-300">
+                <span class="text-4xl font-black text-white">D</span>
+              </div>
+              <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-red-500 rounded-full border-4 border-[#0a0a0a]"></div>
+            </div>
+            <h3 class="font-bold text-2xl mb-2">Dino</h3>
+            <p class="text-brand-accent text-sm font-semibold mb-3 uppercase tracking-wider">Script Developer</p>
+            </div>
+          
+          <div class="group glass-panel p-8 rounded-xl hover:border-brand-cyan/50 transition-all duration-300 transform hover:scale-[1.02] text-center">
+            <div class="relative inline-block mb-6">
+              <div class="w-24 h-24 rounded-full bg-gradient-to-br from-brand-cyan to-blue-500 flex items-center justify-center mx-auto group-hover:shadow-[0_0_40px_rgba(6,182,212,0.4)] transition-shadow duration-300">
+                <span class="text-4xl font-black text-white">R</span>
+              </div>
+              <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-red-500 rounded-full border-4 border-[#0a0a0a]"></div>
+            </div>
+            <h3 class="font-bold text-2xl mb-2">Rbit</h3>
+            <p class="text-brand-cyan text-sm font-semibold mb-3 uppercase tracking-wider">Script Developer</p>
+            </div>
+          
+          <div class="group glass-panel p-8 rounded-xl hover:border-brand-accent/50 transition-all duration-300 transform hover:scale-[1.02] text-center">
+            <div class="relative inline-block mb-6">
+              <div class="w-24 h-24 rounded-full bg-gradient-to-br from-brand-accent to-pink-500 flex items-center justify-center mx-auto group-hover:shadow-[0_0_40px_rgba(255,51,51,0.4)] transition-shadow duration-300">
+                <span class="text-4xl font-black text-white">L</span>
+              </div>
+              <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-red-500 rounded-full border-4 border-[#0a0a0a]"></div>
+            </div>
+            <h3 class="font-bold text-2xl mb-2">Lucas</h3>
+            <p class="text-brand-accent text-sm font-semibold mb-3 uppercase tracking-wider">Script Developer</p>
+            </div>
+          
+          <div class="group glass-panel p-8 rounded-xl hover:border-orange-500/50 transition-all duration-300 transform hover:scale-[1.02] text-center">
+            <div class="relative inline-block mb-6">
+              <div class="w-24 h-24 rounded-full bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center mx-auto group-hover:shadow-[0_0_40px_rgba(255,165,0,0.4)] transition-shadow duration-300">
+                <span class="text-4xl font-black text-white">DB</span>
+              </div>
+              <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-red-500 rounded-full border-4 border-[#0a0a0a]"></div>
+            </div>
+            <h3 class="font-bold text-2xl mb-2">debrainers</h3>
+            <p class="text-orange-500 text-sm font-semibold mb-3 uppercase tracking-wider">Script Developer</p>
+            </div>
+          
+          <div class="group glass-panel p-8 rounded-xl hover:border-white/50 transition-all duration-300 transform hover:scale-[1.02] text-center">
+            <div class="relative inline-block mb-6">
+              <div class="w-24 h-24 rounded-full bg-white flex items-center justify-center mx-auto group-hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-shadow duration-300 border-2 border-yellow-500">
+                <span class="text-4xl font-black text-yellow-500">H</span>
+              </div>
+              <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full border-4 border-[#0a0a0a]"></div>
+            </div>
+            <h3 class="font-bold text-2xl mb-2">hollow</h3>
+            <p class="text-yellow-500 text-sm font-semibold mb-3 uppercase tracking-wider">Owner</p>
+            </div>
+        </div>
+      </div>
+    </section>
+    
+    <footer class="border-t border-white/5 py-12 bg-black">
+      <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="text-center md:text-left">
+          <h4 class="font-bold text-xl tracking-wider mb-2">E.V.E.</h4>
+          <p class="text-gray-500 text-sm">© 2025 E.V.E. Scripts. All rights reserved.</p>
+          <p class="text-gray-600 text-xs mt-2">Made by E.V.E</p>
+        </div>
+        <div class="flex gap-6 text-sm text-gray-500">
+          <a href="terms.html" class="hover:text-white transition-colors">Terms of Service</a>
+          <a href="privacy.html" class="hover:text-white transition-colors">Privacy Policy</a>
+          <a href="contact.html" class="hover:text-white transition-colors">Contact</a>
+        </div>
+      </div>
+    </footer>
+    <script>
+      lucide.createIcons();
+      gsap.registerPlugin(ScrollTrigger);
+      const fadeElements = document.querySelectorAll('section > div');
+      fadeElements.forEach(el => {
+        gsap.fromTo(el, {
+          opacity: 0,
+          y: 50
+        }, {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 80%'
+          }
+        });
+      });
+      const cards = document.querySelectorAll('.tilt-card-wrapper');
+      cards.forEach(wrapper => {
+        const card = wrapper.querySelector('.tilt-card');
+        wrapper.addEventListener('mousemove', (e) => {
+          const rect = wrapper.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -10;
+          const rotateY = ((x - centerX) / centerX) * 10;
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+        wrapper.addEventListener('mouseleave', () => {
+          card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+          card.style.transition = 'transform 0.5s ease';
+        });
+        wrapper.addEventListener('mouseenter', () => {
+          card.style.transition = 'none';
+        });
+      });
+      const canvas = document.getElementById('bg-canvas');
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let particles = [];
+      function resize() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }
+      class Particle {
+        constructor() {
+          this.x = Math.random() * width;
+          this.y = Math.random() * height;
+          this.vx = (Math.random() - 0.5) * 0.5;
+          this.vy = (Math.random() - 0.5) * 0.5;
+          this.size = Math.random() * 2;
+        }
+        update() {
+          this.x += this.vx;
+          this.y += this.vy;
+          if (this.x < 0 || this.x > width) this.vx *= -1;
+          if (this.y < 0 || this.y > height) this.vy *= -1;
+        }
+        draw() {
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      function initParticles() {
+        particles = [];
+        for (let i = 0; i < 80; i++) { 
+          particles.push(new Particle());
+        }
+      }
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach((p, index) => {
+          p.update();
+          p.draw();
+          for (let j = index + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p.x - p2.x;
+            const dy = p.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150) {
+              /* PARTIKEL-LINIE ROT ANPASSEN */
+              ctx.strokeStyle = `rgba(255, 51, 51, ${0.1 - dist/1500})`; 
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          }
+        });
+        requestAnimationFrame(animate);
+      }
+      window.addEventListener('resize', () => {
+        resize();
+        initParticles();
+      });
+      resize();
+      initParticles();
+      animate();
+    </script>
+  </body>
+</html>
